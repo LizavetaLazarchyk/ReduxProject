@@ -1,19 +1,34 @@
 import { useHttp } from "../../hooks/http.hook";
 import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { createSelector } from "reselect";
 
 import {
   heroesFetching,
   heroesFetched,
   heroesFetchingError,
-  heroDeleted
+  heroDeleted,
 } from "../../actions";
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from "../spinner/Spinner";
 
-
 const HeroesList = () => {
-  const { filteredHeroes, heroesLoadingStatus } = useSelector((state) => state);
+  const filteredHeroesSelector = createSelector(
+    (state) => state.filters.activeFilter,
+    (state) => state.heroes.heroes,
+    (filter, heroes) =>{
+      if (filter === "all") {
+        return heroes;
+      }
+      return heroes.filter((item) => {
+        return item.element === filter;
+      });
+    });
+    
+
+  const filteredHeroes = useSelector(filteredHeroesSelector);
+  console.log(filteredHeroes);
+  const heroesLoadingStatus = useSelector((state) => state.heroesLoadingStatus);
   const dispatch = useDispatch();
   const { request } = useHttp();
 
@@ -23,7 +38,7 @@ const HeroesList = () => {
         .then(dispatch(heroDeleted(id)))
         .catch((err) => console.log(err));
     },
-    [request]
+    [request, dispatch]
   );
 
   useEffect(() => {
@@ -31,7 +46,7 @@ const HeroesList = () => {
     request("http://localhost:3001/heroes")
       .then((data) => dispatch(heroesFetched(data)))
       .catch(() => dispatch(heroesFetchingError()));
-  }, []);
+  }, [request, dispatch]);
 
   if (heroesLoadingStatus === "loading") {
     return <Spinner />;
@@ -39,17 +54,23 @@ const HeroesList = () => {
     return <h5 className="text-center mt-5">Ошибка загрузки</h5>;
   }
 
+  console.log(filteredHeroes);
+
   const renderHeroesList = (arr) => {
-    if (arr.length === 0) {
+    if (arr && arr.length === 0) {
       return <h5 className="text-center mt-5">Героев пока нет</h5>;
     }
-
-    return arr.map(({ id, ...props }) => {
-      return <HeroesListItem key={id} onDelete={()=> onDelete(id)} {...props} />;
+    return arr?.map(({ id, ...props }) => {
+      return (
+        <HeroesListItem key={id} onDelete={() => onDelete(id)} {...props} />
+      );
     });
   };
 
+  console.log(filteredHeroes.length);
+
   const elements = renderHeroesList(filteredHeroes);
+  // console.log(elements)
   return <ul>{elements}</ul>;
 };
 

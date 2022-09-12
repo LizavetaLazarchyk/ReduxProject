@@ -12,7 +12,7 @@ import Spinner from "../spinner/Spinner";
 
 const HeroesFilters = () => {
   const { filters, filtersLoadingStatus, activeFilter } = useSelector(
-    (state) => state
+    (state) => state.filters
   );
   const dispatch = useDispatch();
   const { request } = useHttp();
@@ -22,7 +22,7 @@ const HeroesFilters = () => {
     request("http://localhost:3001/filters")
       .then((data) => dispatch(filtersFetched(data)))
       .catch(() => dispatch(filtersFetchingError()));
-  }, []);
+  }, [request, dispatch]);
 
   if (filtersLoadingStatus === "loading") {
     return <Spinner />;

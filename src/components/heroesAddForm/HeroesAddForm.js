@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { heroCreated } from '../../actions';
 
 const HeroesAddForm = () => {
-    const {filters, filtersLoadingStatus} = useSelector(state => state);
+    const {filters, filtersLoadingStatus} = useSelector(state => state.filters);
     const {request} = useHttp();
     const dispatch = useDispatch();
 
@@ -41,7 +41,7 @@ const HeroesAddForm = () => {
         }
         if (filters && filters.length > 0 ) {
             return filters.map(({name, label}) => {
-                // if (name === 'all')  return;
+                // if (name === 'all') { return null };
                 return <option key={name} value={name}>{label}</option>
             })
         }
