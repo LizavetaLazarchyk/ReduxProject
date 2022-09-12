@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { heroCreated } from '../../actions';
 
 const HeroesAddForm = () => {
+    const {filters, filtersLoadingStatus} = useSelector(state => state);
     const {request} = useHttp();
     const dispatch = useDispatch();
 
@@ -30,6 +31,20 @@ const HeroesAddForm = () => {
         setName('');
         setDescription('');
         setElement('');
+    }
+
+    const renderFilters = (filters, filtersLoadingStatus) => {
+        if (filtersLoadingStatus === "loading") {
+            return <option>Загрузка элементов</option>
+        } else if (filtersLoadingStatus === "error") {
+            return <option>Ошибка загрузки</option>
+        }
+        if (filters && filters.length > 0 ) {
+            return filters.map(({name, label}) => {
+                // if (name === 'all')  return;
+                return <option key={name} value={name}>{label}</option>
+            })
+        }
     }
 
     return (
@@ -69,11 +84,7 @@ const HeroesAddForm = () => {
                     className="form-select" 
                     id="element" 
                     name="element">
-                    <option >Я владею элементом...</option>
-                    <option value="fire">Огонь</option>
-                    <option value="water">Вода</option>
-                    <option value="wind">Ветер</option>
-                    <option value="earth">Земля</option>
+                    {renderFilters(filters, filtersLoadingStatus)}
                 </select>
             </div>
 

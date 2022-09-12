@@ -39,7 +39,7 @@ export const filtersFetching = () => {
 
 export const filtersFetched = (filters) => {
     return {
-        type: 'HEROES_FETCHED__FILTERS',
+        type: 'HEROES_FETCHED_FILTERS',
         payload: filters
     }
 }
