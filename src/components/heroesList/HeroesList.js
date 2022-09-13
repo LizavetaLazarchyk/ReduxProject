@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "reselect";
 
 import {
-  heroesFetching,
-  heroesFetched,
-  heroesFetchingError,
+  fetchHeroes,
   heroDeleted,
 } from "../../actions";
 import HeroesListItem from "../heroesListItem/HeroesListItem";
@@ -42,10 +40,7 @@ const HeroesList = () => {
   );
 
   useEffect(() => {
-    dispatch(heroesFetching());
-    request("http://localhost:3001/heroes")
-      .then((data) => dispatch(heroesFetched(data)))
-      .catch(() => dispatch(heroesFetchingError()));
+    dispatch(fetchHeroes(request));
   }, [request, dispatch]);
 
   if (heroesLoadingStatus === "loading") {
