@@ -1,12 +1,10 @@
 import { useHttp } from "../../hooks/http.hook";
 import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createSelector } from "reselect";
+import { createSelector } from "@reduxjs/toolkit";
 
-import {
-  fetchHeroes,
-  heroDeleted,
-} from "../../actions";
+// import {fetchHeroes} from "../../actions";
+import {heroDeleted, fetchHeroes} from "./heroesSlice"
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from "../spinner/Spinner";
 
@@ -25,7 +23,6 @@ const HeroesList = () => {
     
 
   const filteredHeroes = useSelector(filteredHeroesSelector);
-  console.log(filteredHeroes);
   const heroesLoadingStatus = useSelector((state) => state.heroesLoadingStatus);
   const dispatch = useDispatch();
   const { request } = useHttp();
@@ -40,8 +37,8 @@ const HeroesList = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchHeroes(request));
-  }, [request, dispatch]);
+    dispatch(fetchHeroes());
+  }, []);
 
   if (heroesLoadingStatus === "loading") {
     return <Spinner />;

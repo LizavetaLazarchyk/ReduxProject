@@ -1,7 +1,6 @@
-// import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
-// import ReduxThunk from "redux-thunk";
-import heroes from "../reducers/heroes";
-import filters from "../reducers/filters";
+import heroes from "../components/heroesList/heroesSlice";
+import filters from "../components/heroesFilters/filtersSlice"
+
 import { configureStore } from '@reduxjs/toolkit';
 
 const stringMiddleware = () => (next) => (action) => {
@@ -20,6 +19,11 @@ const store = configureStore({
 })
 
 export default store;
+
+// import heroes from "../reducers/heroes";
+// import filters from "../reducers/filters";
+// import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
+// import ReduxThunk from "redux-thunk";
 
 // enhancer может модифицировать весь store, а Middleware только dispatch (next в функции)
 // const enhancer = (createStore) => (...args) => {
